@@ -13,6 +13,8 @@ class Game:
 
         self.clock = pygame.time.Clock()
 
+        self.img = pygame.image.load('data/images/clouds/cloud_1.png')
+
     def run(self):
         while True:
             for event in pygame.event.get():
