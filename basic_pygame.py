@@ -1,51 +1,65 @@
+import sys
+
 # import the pygame module
 import pygame
 
-# initialize pygame
-pygame.init()
+class Game:
+    def __init__(self):
 
-# set screen width and height
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+        # initialize pygame
+        pygame.init()
 
-# render screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        # set screen width and height
+        SCREEN_WIDTH = 800
+        SCREEN_HEIGHT = 600
 
-# establish player character
-player = pygame.Rect((300, 250, 50, 50))
+        # change caption for game window
+        pygame.display.set_caption('Basic Pygame Scripts')
 
-# create game loop
-run = True
-while run:
+        # render screen
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    # update with black screen to erase trails
-    screen.fill((0, 0, 0))
+        # adding clock to force 60 fps game
+        self.clock = pygame.time.Clock()
 
-    # drawing the player rectangle
-    pygame.draw.rect(screen, (255, 0, 0), player)
+        # establish player character
+        self.player = pygame.Rect((300, 250, 50, 50))
 
-    # search for key inputs
-    key = pygame.key.get_pressed()
+    def run(self):
+        # create game loop
+        while True:
 
-    # basic wasd movement
-    if key[pygame.K_w] == True:
-        player.move_ip(0, -1)
-    elif key[pygame.K_a] == True:
-        player.move_ip(-1, 0)
-    elif key[pygame.K_s] == True:
-        player.move_ip(0, 1)
-    elif key[pygame.K_d] == True:
-        player.move_ip(1, 0)
+            # update with black screen to erase trails
+            self.screen.fill((0, 0, 0))
 
-    # establish event handler
-    for event in pygame.event.get():
+            # drawing the player rectangle
+            pygame.draw.rect(self.screen, (255, 0, 0), self.player)
 
-        # check for closing window
-        if event.type == pygame.QUIT:
-            run = False
-    
-    #force update the game for each loop iteration
-    pygame.display.update()
+            # search for key inputs
+            key = pygame.key.get_pressed()
 
-# quit pygame
-pygame.quit()
+            # basic wasd movement
+            if key[pygame.K_w] == True:
+                self.player.move_ip(0, -1)
+            elif key[pygame.K_a] == True:
+                self.player.move_ip(-1, 0)
+            elif key[pygame.K_s] == True:
+                self.player.move_ip(0, 1)
+            elif key[pygame.K_d] == True:
+                self.player.move_ip(1, 0)
+
+            # establish event handler
+            for event in pygame.event.get():
+
+                # check for closing window and quit both pygame and app
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            # force update the game for each loop iteration
+            pygame.display.update()
+
+            # enable the fps limit
+            self.clock.tick(60)
+
+Game().run()
