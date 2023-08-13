@@ -65,11 +65,17 @@ class Game:
                         self.key_time = current_time
                     if event.key == pygame.K_w:
                         self.player.velocity[1] = -3
+                    if event.key == pygame.K_LSHIFT:
+                        self.movement[0] *= 2
+                        self.movement[1] *= 2
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = 0
                     if event.key == pygame.K_d:
                         self.movement[1] = 0
+                    # if event.key == pygame.K_LSHIFT:
+                    #     self.movement[0] /= 2
+                    #     self.movement[1] /= 2
 
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
             pygame.display.update()
