@@ -25,12 +25,15 @@ class Game:
             'grass': load_images('tiles/grass'),
             'stone': load_images('tiles/stone'),
             'large_decor': load_images('tiles/large_decor'),
-            'player': load_image('entities/player.png') 
+            'player': load_image('entities/player.png'),
+            'background': load_image('background.png')
         }
 
         self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15))
 
         self.tilemap = Tilemap(self, tile_size=16)
+
+        self.scroll = [0, 0]
 
         self.key_time = 0
         self.fast_key_time = 200
@@ -39,12 +42,16 @@ class Game:
         while True:
             current_time = pygame.time.get_ticks()
 
-            self.display.fill((135, 206, 235))
-            
-            self.tilemap.render(self.display)
+            self.display.blit(self.assets['background'], (0, 0))
+
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 15
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 15
+            render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
+
+            self.tilemap.render(self.display, offset = render_scroll)
 
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-            self.player.render(self.display)
+            self.player.render(self.display, offset = render_scroll)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -54,12 +61,14 @@ class Game:
                     if event.key == pygame.K_a:
                         if current_time < self.key_time + self.fast_key_time:
                             self.player.velocity[0] = -3.5
+                            self.movement[0] = 1
                         else:
                             self.movement[0] = 1
                         self.key_time = current_time
                     if event.key == pygame.K_d:
                         if current_time < self.key_time + self.fast_key_time:
                             self.player.velocity[0] = 3.5
+                            self.movement[1] = 1
                         else:
                             self.movement[1] = 1
                         self.key_time = current_time
@@ -73,9 +82,6 @@ class Game:
                         self.movement[0] = 0
                     if event.key == pygame.K_d:
                         self.movement[1] = 0
-                    # if event.key == pygame.K_LSHIFT:
-                    #     self.movement[0] /= 2
-                    #     self.movement[1] /= 2
 
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
             pygame.display.update()

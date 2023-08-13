@@ -57,6 +57,6 @@ class PhysicsEntity:
             self.velocity[0] = max(0, self.velocity[0] - self.friction)
 
         
-    def render(self, surf):
-        surf.blit(self.game.assets['player'], self.pos)
+    def render(self, surf, offset = (0, 0)):
+        surf.blit(self.game.assets['player'], (self.pos[0] - offset[0], self.pos[1] - offset[1]))
         
