@@ -1,4 +1,5 @@
 import sys
+import time
 import pygame
 from scripts.entities import PhysicsEntity
 from scripts.utils import load_image, load_images
@@ -31,8 +32,13 @@ class Game:
 
         self.tilemap = Tilemap(self, tile_size=16)
 
+        self.key_time = 0
+        self.fast_key_time = 200
+
     def run(self):
         while True:
+            current_time = pygame.time.get_ticks()
+
             self.display.fill((135, 206, 235))
             
             self.tilemap.render(self.display)
@@ -45,17 +51,25 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.movement[0] = True
-                    if event.key == pygame.K_RIGHT:
-                        self.movement[1] = True
-                    if event.key == pygame.K_UP:
+                    if event.key == pygame.K_a:
+                        if current_time < self.key_time + self.fast_key_time:
+                            self.player.velocity[0] = -3.5
+                        else:
+                            self.movement[0] = 1
+                        self.key_time = current_time
+                    if event.key == pygame.K_d:
+                        if current_time < self.key_time + self.fast_key_time:
+                            self.player.velocity[0] = 3.5
+                        else:
+                            self.movement[1] = 1
+                        self.key_time = current_time
+                    if event.key == pygame.K_w:
                         self.player.velocity[1] = -3
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT:
-                        self.movement[0] = False
-                    if event.key == pygame.K_RIGHT:
-                        self.movement[1] = False
+                    if event.key == pygame.K_a:
+                        self.movement[0] = 0
+                    if event.key == pygame.K_d:
+                        self.movement[1] = 0
 
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
             pygame.display.update()
