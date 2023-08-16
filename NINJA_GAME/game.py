@@ -21,7 +21,7 @@ class Game:
         self.display = pygame.Surface((320, 240))
         self.clock = pygame.time.Clock()
 
-        self.movement = [False, False]
+        self.movement = [0, 0]
 
         self.assets = {
             'decor': load_images('tiles/decor'),
@@ -54,6 +54,7 @@ class Game:
 
         self.scroll = [0, 0]
 
+        self.running = False
         self.key_time = 0
         self.fast_key_time = 200
 
@@ -96,27 +97,52 @@ class Game:
                     if event.key == pygame.K_a:
                         if current_time < self.key_time + self.fast_key_time:
                             self.player.velocity[0] = -3.5
-                            self.movement[0] = 1
+                            if self.running:
+                                self.movement[0] = 2
+                            else:
+                                self.movement[0] = 1
                         else:
-                            self.movement[0] = 1
+                            if self.running:
+                                self.movement[0] = 2
+                            else:
+                                self.movement[0] = 1
                         self.key_time = current_time
                     if event.key == pygame.K_d:
                         if current_time < self.key_time + self.fast_key_time:
                             self.player.velocity[0] = 3.5
-                            self.movement[1] = 1
+                            if self.running:
+                                self.movement[1] = 2
+                            else:
+                                self.movement[1] = 1
                         else:
-                            self.movement[1] = 1
+                            if self.running:
+                                self.movement[1] = 2
+                            else:
+                                self.movement[1] = 1
                         self.key_time = current_time
                     if event.key == pygame.K_w:
                         self.player.velocity[1] = -3
                     if event.key == pygame.K_LSHIFT:
-                        self.movement[0] *= 2
-                        self.movement[1] *= 2
+                            self.running = True
+                            if self.movement[0] == 1:
+                                self.movement[0] = 2
+                            else:
+                                self.movement[0] = 0
+                            if self.movement[1] == 1:
+                                self.movement[1] = 2
+                            else:
+                                self.movement[1] = 0
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = 0
                     if event.key == pygame.K_d:
                         self.movement[1] = 0
+                    if event.key == pygame.K_LSHIFT:
+                        self.running = False
+                        if self.movement[0] == 2:
+                            self.movement[0] /= 2
+                        if self.movement[1] == 2:
+                            self.movement[1] /= 2
 
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
             pygame.display.update()
